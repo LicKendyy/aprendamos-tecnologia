@@ -144,8 +144,8 @@ const cls=()=>course()?.classes.find(c=>c.id===app.activeClass);
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 
 // CONFIGURACIÓN: reemplaza estos dos valores con los de tu proyecto Supabase.
-const SUPABASE_URL = "PEGA_AQUI_LA_URL_DE_TU_PROYECTO";
-const SUPABASE_KEY = "PEGA_AQUI_LA_CLAVE_PUBLICA_DE_TU_PROYECTO";
+const SUPABASE_URL = "https://lbhnxmyxkenrwtncjpyd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_f3OY7F11W0MFTifT5l_N4w_-fywyJSD";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let loadingData = false;
