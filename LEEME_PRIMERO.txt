@@ -1,0 +1,47 @@
+# Aprendamos de Tecnología — versión para GitHub Pages y Supabase
+
+Esta carpeta conserva la interfaz original y añade inicio de sesión y guardado de los datos en Supabase. Las imágenes exclusivas de Canva se reemplazaron por ilustraciones SVG locales.
+
+## Antes de publicar
+
+1. Abre `index.html` con un editor de texto. Busca `PEGA_AQUI_LA_URL_DE_TU_PROYECTO` y `PEGA_AQUI_LA_CLAVE_PUBLICA_DE_TU_PROYECTO` y reemplázalos con la URL y la clave pública (publishable/anon) de tu proyecto Supabase.
+2. En Supabase, abre **SQL Editor** y ejecuta:
+
+```sql
+create table public.teacher_state (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  courses jsonb not null default '[]'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.teacher_state enable row level security;
+
+create policy "Read own teacher state"
+on public.teacher_state for select to authenticated
+using ((select auth.uid()) = user_id);
+
+create policy "Insert own teacher state"
+on public.teacher_state for insert to authenticated
+with check ((select auth.uid()) = user_id);
+
+create policy "Update own teacher state"
+on public.teacher_state for update to authenticated
+using ((select auth.uid()) = user_id)
+with check ((select auth.uid()) = user_id);
+```
+
+3. En Supabase, entra a **Authentication → Users** y crea tu usuario docente. El inicio de sesión de la web utiliza ese correo y contraseña.
+4. Sube `index.html` y la carpeta `assets` al repositorio GitHub. No subas listas de estudiantes reales al código.
+5. En GitHub, abre **Settings → Pages**, elige la rama `main` y la carpeta raíz, y guarda.
+6. Abre la dirección publicada, inicia sesión y prueba creando un curso de prueba. Recarga la página para confirmar que permanece.
+
+## Seguridad
+
+- No pegues en el HTML la contraseña de la base de datos ni una clave `service_role`/secret. Solo se debe usar la clave pública del proyecto con las políticas RLS activadas.
+- En Supabase, desactiva el registro público si solo tú usarás la aplicación.
+- El repositorio contiene el código de la interfaz; no pongas nombres, observaciones ni datos reales de estudiantes en el código.
+- La aplicación guarda datos estructurados de cursos, estudiantes, clases, tareas y puntos en la tabla `teacher_state`. La gestión de archivos adjuntos como PDF, Word o PowerPoint aún necesita integrarse con Supabase Storage; no subas información sensible esperando que el archivo adjunto se guarde en la base de datos automáticamente.
+
+## Importante
+
+Esta es una adaptación inicial del HTML generado por Canva, no una auditoría profesional. Antes de usarla con datos reales, prueba todos los botones que modifican datos, la autenticación y las políticas de acceso. La interfaz puede requerir ajustes menores si alguna función dependía de servicios internos de Canva.

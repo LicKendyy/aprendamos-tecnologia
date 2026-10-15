@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprendamos Tecnología</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;family=Fraunces:opsz,wght@9..144,700;9..144,800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#1469d8;--navy:#10365f;--sky:#e8f6ff;--orange:#f47a20;--green:#18a866;--coral:#df5b50;--ink:#16324f}
+    *{box-sizing:border-box} body{margin:0;font-family:"DM Sans",sans-serif;color:var(--ink);background:#f7fbff}
+    button,input,select,textarea{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.55}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #f6ad3a;outline-offset:3px}
+    .app-shell{width:100%;min-height:calc(100 * min(var(--vh,1vh),1vh));background:linear-gradient(135deg,#f8fcff,#eaf7ff)}
+    .brand{font-family:Fraunces,serif;color:var(--navy)} .view{display:none;animation:rise .25s ease}.view.active{display:block}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pop{0%{opacity:0;transform:scale(.75)}70%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+    @keyframes pulseGlow{50%{box-shadow:0 0 0 12px rgba(255,255,255,.14),0 0 38px rgba(255,235,120,.7)}}
+    .panel{background:#fff;border:2px solid #d8efff;border-radius:24px;box-shadow:0 10px 24px rgba(22,79,133,.08)}
+    .card{background:#fff;border:2px solid #e0eff9;border-radius:19px;padding:1rem}
+    .game-btn{border:0;border-radius:14px;min-height:44px;padding:.72rem .9rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:.42rem;transition:.18s}
+    .game-btn:hover:not(:disabled){transform:translateY(-2px)} .primary{background:var(--blue);color:#fff;box-shadow:0 4px 0 #0e51aa}.green{background:var(--green);color:#fff;box-shadow:0 4px 0 #0d7847}.orange{background:var(--orange);color:#fff;box-shadow:0 4px 0 #bd5813}.soft{background:#e9f6ff;color:#15559e}.danger{background:#fff0ed;color:#bf3f35}.noise{background:var(--coral);color:#fff;box-shadow:0 4px 0 #ad3e37}.noise.active{animation:pulseGlow 1s infinite}
+    .topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:4px solid #d8efff}.teacher{object-fit:contain;filter:drop-shadow(0 8px 9px rgba(20,105,216,.13))}
+    .timer{font-variant-numeric:tabular-nums;letter-spacing:.08em}.badge{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;padding:.35rem .64rem;font-size:.76rem;font-weight:800}
+    .progress{height:13px;border-radius:999px;background:#d7edfa;overflow:hidden}.progress>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#14a4d8,#38c576);transition:width .3s}
+    .tab.active{background:#dff3ff;color:#075bae;border-color:#78c9ef}.tab{background:#fff;border:2px solid #d9edfa;color:#47708e}
+    .modal-wrap{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(11,45,78,.55)}.modal-wrap.show{display:flex}
+    .modal{width:min(760px,100%);max-height:90%;overflow:auto;background:#fff;border-radius:26px;padding:1.35rem;box-shadow:0 24px 70px rgba(5,39,75,.3)}
+    .form-control{width:100%;border:2px solid #cce7f8;border-radius:12px;padding:.7rem .8rem;background:#fbfdff}
+    .toast{position:fixed;bottom:20px;right:20px;z-index:100;background:#123a65;color:#fff;padding:.8rem 1rem;border-radius:14px;font-weight:700;opacity:0;transform:translateY(20px);transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:none}
+    .mission-modal{width:min(880px,100%);min-height:calc(57 * min(var(--vh,1vh),1vh));text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,#edf9ff,#fff9e7);animation:pop .45s ease}.mission-modal:before{content:"✦  ✦   ✧   ✦  ✧  ✦";position:absolute;top:18px;left:0;width:100%;color:#f47a20;font-size:1.45rem;letter-spacing:.7rem}.celebrate-avatar{width:min(330px,78%);height:280px;object-fit:contain;animation:pulseGlow 1.4s infinite;border-radius:30px}
+    .noise-modal{width:min(760px,100%);min-height:calc(50 * min(var(--vh,1vh),1vh));background:#d94b42;color:white;text-align:center;border:7px solid #ffb0a9;box-shadow:0 25px 80px rgba(130,25,18,.55)}.noise-modal .progress{background:#8f2621}.noise-modal .progress span{background:#ffe07a}
+    .file-card{border-left:6px solid #51a9de}.file-card.pdf{border-left-color:#df5b50}.file-card.word{border-left-color:#1469d8}.file-card.power{border-left-color:#f47a20}
+    .file-preview{width:100%;height:330px;border:2px solid #d8efff;border-radius:15px;background:#f5fbff}
+    @media(max-width:700px){.hide-sm{display:none}.course-grid{grid-template-columns:1fr!important}.noise-modal{min-height:calc(58 * min(var(--vh,1vh),1vh))}}
+  </style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ </head>
+ <body data-template-id="__page-root" style="background: rgb(247, 251, 255);">
+  
+  <section id="login-view" class="panel" style="max-width:440px;margin:10vh auto;padding:28px;display:none">
+    <div class="text-center">
+      <div style="font-size:42px">💻</div>
+      <h1 class="brand text-2xl mt-2">Aprendamos de Tecnología</h1>
+      <p class="text-slate-500 mt-2">Inicia sesión para acceder a tus cursos.</p>
+    </div>
+    <form id="login-form" onsubmit="login(event)" class="mt-5">
+      <label class="font-bold block">Correo electrónico
+        <input class="form-control mt-1" name="email" type="email" autocomplete="username" required>
+      </label>
+      <label class="font-bold block mt-3">Contraseña
+        <input class="form-control mt-1" name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="game-btn primary mt-5" style="width:100%">Iniciar sesión</button>
+      <p id="login-error" class="text-red-700 mt-3" role="alert"></p>
+    </form>
+  </section>
+
+  <div class="app-shell" style="display:none">
+   <header class="topbar">
+    <div class="w-full max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3"><button type="button" class="flex items-center gap-2 text-left" onclick="goHome()" aria-label="Volver al inicio"> <span class="w-11 h-11 grid place-items-center rounded-2xl bg-blue-600 text-white"><i data-lucide="cpu"></i></span> <span><strong data-template-id="app-title" class="canva-text brand" style="color: rgb(16, 54, 95); font-weight: 800; font-style: normal; font-size: 16px;">Aprendamos de Tecnología</strong><small data-template-id="app-subtitle" class="canva-text block" style="color: rgb(20, 105, 216); font-weight: 700; font-style: normal; font-size: 12px;">Material de apoyo educativo</small></span> </button>
+     <div class="flex items-center gap-2">
+      <div id="active-tools" class="hidden items-center gap-2">
+       <div class="hide-sm text-right">
+        <p class="text-[10px] font-bold text-slate-500">CLASE ACTIVA</p>
+        <p id="active-class-name" class="font-extrabold text-blue-800 text-sm"></p>
+       </div>
+       <div class="rounded-2xl bg-blue-700 text-white px-3 py-2 text-center">
+        <div class="text-[10px] font-bold">
+         TIEMPO
+        </div>
+        <div id="timer-display" class="timer font-extrabold">
+         55:00
+        </div>
+       </div><button class="game-btn orange px-3" id="timer-toggle" type="button" onclick="toggleTimer()" aria-label="Iniciar temporizador"><i data-lucide="play"></i></button>
+      </div><button id="noise-top-button" class="game-btn noise px-3" type="button" onclick="startNoise()" aria-label="Abrir alerta de ruido"><i data-lucide="megaphone"></i><span class="hide-sm">Ruido</span></button> <img data-template-id="teacher-avatar-main" class="canva-image teacher w-14 h-14" loading="lazy" src="./assets/docente-principal.svg" alt="Avatar docente amable con gafas, barba, portátil y elementos tecnológicos">
+     </div>
+    </div>
+   </header>
+   <main class="w-full max-w-7xl mx-auto px-4 py-6">
+    <section id="home-view" class="view active">
+     <div class="panel p-5 md:p-7 flex flex-col md:flex-row items-center gap-5"><img data-template-id="teacher-avatar-class" class="canva-image teacher w-28 h-28" loading="lazy" src="./assets/docente-clase.svg" alt="Avatar sonriente de docente de Tecnología señalando una idea">
+      <div class="flex-1 text-center md:text-left">
+       <span data-template-id="welcome-tag" class="canva-tag badge" style="background: rgb(255, 240, 220); color: rgb(185, 82, 13); font-weight: 800; font-style: normal; font-size: 13px;">🎮 LISTOS PARA APRENDER</span>
+       <h1 data-template-id="welcome-title" class="canva-text brand mt-2" style="color: rgb(16, 54, 95); font-weight: 800; font-style: normal; font-size: 32px;">¡Hola, profe! Construyamos grandes clases.</h1>
+       <p data-template-id="welcome-copy" class="canva-text mt-2" style="color: rgb(70, 100, 125); font-weight: 400; font-style: normal; font-size: 16px;">Juan Felipe Chacón Colmenares - Lic. en Diseño Tecnológico - UPN</p>
+      </div>
+     </div>
+     <div class="flex justify-between items-center mt-7 mb-3">
+      <h2 data-template-id="courses-heading" class="canva-text brand" style="color: rgb(16, 54, 95); font-weight: 800; font-style: normal; font-size: 24px;">Tus cursos</h2><button data-template-id="add-course-button" class="canva-button game-btn soft" type="button" onclick="openCourseModal()" style="background: rgb(233, 246, 255); color: rgb(21, 85, 158); font-weight: 800;"><i data-lucide="plus"></i><span data-template-id="add-course-label" class="canva-text" style="color: rgb(21, 85, 158); font-weight: 800; font-style: normal; font-size: 16px;">Nuevo curso</span></button>
+     </div>
+     <div id="course-list" class="course-grid grid md:grid-cols-2 gap-5"></div>
+    </section>
+    <section id="course-view" class="view">
+     <div class="flex flex-wrap justify-between gap-3 items-start mb-5">
+      <div>
+       <button class="text-blue-700 font-bold mb-2" type="button" onclick="goHome()">← Cursos</button>
+       <h1 id="course-title" class="brand text-3xl"></h1>
+       <p class="text-slate-500">Organiza tus clases, tareas y recursos.</p>
+      </div><button class="game-btn primary" type="button" onclick="openClassModal()"><i data-lucide="plus"></i>Crear clase</button>
+     </div>
+     <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5" aria-label="Secciones del curso"><button class="game-btn tab active" data-course-tab="classes" onclick="showCourseTab('classes')"><i data-lucide="calendar-days"></i>Clases</button> <button class="game-btn tab" data-course-tab="tasks" onclick="showCourseTab('tasks')"><i data-lucide="notebook-pen"></i>Tareas</button> <button class="game-btn tab" data-course-tab="materials" onclick="showCourseTab('materials')"><i data-lucide="folder-open"></i>Materiales</button> <button class="game-btn tab" data-course-tab="students" onclick="showCourseTab('students')"><i data-lucide="users"></i>Estudiantes</button>
+     </nav>
+     <div id="course-content"></div>
+    </section>
+    <section id="class-view" class="view">
+     <div class="flex flex-wrap justify-between gap-3 mb-5">
+      <div>
+       <button class="text-blue-700 font-bold mb-2" type="button" onclick="backToCourse()">← Volver al curso</button>
+       <h1 id="class-title" class="brand text-3xl"></h1>
+       <p id="class-date" class="text-slate-500"></p>
+      </div><button data-template-id="close-class-button" class="canva-button game-btn danger" type="button" onclick="showClassTab('close')" style="background: rgb(255, 240, 237); color: rgb(199, 67, 39); font-weight: 800;"><i data-lucide="door-open"></i><span data-template-id="close-class-label" class="canva-text" style="color: rgb(199, 67, 39); font-weight: 800; font-style: normal; font-size: 16px;">Cerrar clase</span></button>
+     </div>
+     <nav class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-5" aria-label="Módulos de clase"><button class="game-btn tab active" data-class-tab="attendance" onclick="showClassTab('attendance')"><i data-lucide="clipboard-check"></i>Llamado a lista</button> <button class="game-btn tab" data-class-tab="missions" onclick="showClassTab('missions')"><i data-lucide="rocket"></i>Misiones</button> <button class="game-btn tab" data-class-tab="materials" onclick="showClassTab('materials')"><i data-lucide="folder-open"></i>Materiales</button> <button class="game-btn tab" data-class-tab="noise" onclick="showClassTab('noise')"><i data-lucide="megaphone"></i>Ruido</button> <button class="game-btn tab" data-class-tab="close" onclick="showClassTab('close')"><i data-lucide="award"></i>Cerrar clase</button>
+     </nav>
+     <div class="grid lg:grid-cols-[1.6fr_.8fr] gap-5">
+      <section class="panel p-4 md:p-5">
+       <div id="class-content"></div>
+      </section>
+      <aside id="class-side" class="space-y-4"></aside>
+     </div>
+    </section>
+   </main>
+  </div>
+  <div id="modal-wrap" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+   <div id="modal-box" class="modal">
+    <div class="flex justify-between items-center gap-3 mb-4">
+     <h2 id="modal-title" class="brand text-2xl"></h2><button class="game-btn soft px-3" type="button" onclick="closeModal()" aria-label="Cerrar diálogo"><i data-lucide="x"></i></button>
+    </div>
+    <div id="modal-body"></div>
+   </div>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script>
+const app={
+  courses:[],activeCourse:null,activeClass:null,courseTab:"classes",classTab:"attendance",
+  timer:3300,timerHandle:null,noise:{active:false,left:10,timer:null,beep:null,penalty:2,audio:false},lastVoice:"",voiceRate:.95,voiceUri:""
+};
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]));
+const uid=p=>p+Date.now()+Math.random().toString(16).slice(2);
+const course=()=>app.courses.find(c=>c.id===app.activeCourse);
+const cls=()=>course()?.classes.find(c=>c.id===app.activeClass);
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+
+// CONFIGURACIÓN: reemplaza estos dos valores con los de tu proyecto Supabase.
+const SUPABASE_URL = "PEGA_AQUI_LA_URL_DE_TU_PROYECTO";
+const SUPABASE_KEY = "PEGA_AQUI_LA_CLAVE_PUBLICA_DE_TU_PROYECTO";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+let loadingData = false;
+let saveTimer = null;
+let saveQueue = Promise.resolve();
+const proxyCache = new WeakMap();
+const observedProxies = new WeakSet();
+
+function observe(value) {
+  if (!value || typeof value !== "object") return value;
+  if (observedProxies.has(value)) return value;
+  if (proxyCache.has(value)) return proxyCache.get(value);
+  const proxy = new Proxy(value, {
+    get(target, property, receiver) {
+      return observe(Reflect.get(target, property, receiver));
+    },
+    set(target, property, newValue, receiver) {
+      const result = Reflect.set(target, property, newValue, receiver);
+      if (result) scheduleSave();
+      return result;
+    },
+    deleteProperty(target, property) {
+      const result = Reflect.deleteProperty(target, property);
+      if (result) scheduleSave();
+      return result;
+    }
+  });
+  proxyCache.set(value, proxy);
+  observedProxies.add(proxy);
+  return proxy;
+}
+
+function scheduleSave() {
+  if (!currentUser || loadingData) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveQueue = saveQueue.then(() => saveState()).catch(error => {
+      console.error("Error guardando datos en Supabase:", error);
+      toast("No se pudo guardar. Revisa tu conexión.");
+    });
+  }, 800);
+}
+
+async function saveState() {
+  if (!currentUser) return;
+  const coursesCopy = JSON.parse(JSON.stringify(app.courses));
+  const { error } = await sb.from("teacher_state").upsert({
+    user_id: currentUser.id,
+    courses: coursesCopy,
+    updated_at: new Date().toISOString()
+  }, { onConflict: "user_id" });
+  if (error) throw error;
+}
+
+async function startApp() {
+  const loginView = $("login-view");
+  const appShell = document.querySelector(".app-shell");
+  const errorBox = $("login-error");
+  try {
+    const { data, error: authError } = await sb.auth.getUser();
+    if (authError) throw authError;
+    currentUser = data.user;
+    if (!currentUser) {
+      loginView.style.display = "block";
+      appShell.style.display = "none";
+      return;
+    }
+    loadingData = true;
+    const { data: saved, error } = await sb.from("teacher_state")
+      .select("courses").eq("user_id", currentUser.id).maybeSingle();
+    if (error) throw error;
+    app.courses = observe(saved ? (saved.courses || []) : []);
+    loadingData = false;
+    loginView.style.display = "none";
+    appShell.style.display = "";
+    renderHome();
+    icons();
+    if (!saved) await saveState();
+  } catch (error) {
+    loadingData = false;
+    console.error("No se pudo iniciar la plataforma:", error);
+    loginView.style.display = "block";
+    appShell.style.display = "none";
+    if (errorBox) errorBox.textContent = "No se pudieron cargar los datos. Verifica la configuración de Supabase y vuelve a intentarlo.";
+  }
+}
+
+async function login(event) {
+  event.preventDefault();
+  const form = event.target;
+  const values = new FormData(form);
+  const errorBox = $("login-error");
+  errorBox.textContent = "";
+  const { error } = await sb.auth.signInWithPassword({
+    email: values.get("email"),
+    password: values.get("password")
+  });
+  if (error) {
+    errorBox.textContent = "No se pudo iniciar sesión. Revisa el correo y la contraseña.";
+    console.error(error);
+    return;
+  }
+  await startApp();
+}
+
+function icons(){if(window.lucide)lucide.createIcons()}
+function toast(text){$("toast").textContent=text;$("toast").classList.add("show");clearTimeout(app.toastTimer);app.toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2800)}
+function switchView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active");icons()}
+function showModal(title,html,kind=""){ $("modal-title").textContent=title;$("modal-body").innerHTML=html;$("modal-box").className="modal "+kind;$("modal-wrap").classList.add("show");icons()}
+function closeModal(){$("modal-wrap").classList.remove("show");$("modal-box").className="modal"}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(app.noise.active)stopNoise();else closeModal()}});
+
+function makeClass(n){
+ return {id:uid("cl"),title:"Clase "+n,date:"2026-09-25",status:"Pendiente",group:0,calls:0,penalty:2,attendance:{},attendanceRewarded:false,missions:[{id:uid("m"),title:"Circuito de ideas",description:"Diseñen un circuito simple en equipo.",time:"20 min",points:5,status:"pending",awarded:false,files:[]}],materials:[],history:["Clase creada con 0 / 50 puntos del equipo"],check:[false,false,false,false]};
+}
+function goHome(){app.activeCourse=null;app.activeClass=null;$("active-tools").classList.add("hidden");renderHome();switchView("home-view")}
+function renderHome(){
+ $("course-list").innerHTML=app.courses.length?app.courses.map(c=>`<article class="panel overflow-hidden"><div class="h-2 bg-gradient-to-r from-blue-600 via-sky-400 to-green-500"></div><div class="p-5"><div class="flex justify-between gap-3"><div><span class="badge bg-sky-100 text-blue-700"><i data-lucide="users"></i>${c.students.length} estudiantes</span><h3 class="brand text-2xl mt-3">${esc(c.name)}</h3><p class="text-slate-500 text-sm mt-1">${c.classes.length} clases · ${c.tasks.length} tareas</p></div><span class="text-4xl">💻</span></div><div class="grid grid-cols-2 gap-2 mt-5"><button class="game-btn primary col-span-2" onclick="openCourse('${c.id}')"><i data-lucide="arrow-right"></i>Ingresar</button><button class="game-btn soft" onclick="openCourseModal('${c.id}')"><i data-lucide="pencil"></i>Editar curso</button><button class="game-btn soft" onclick="duplicateCourse('${c.id}')"><i data-lucide="copy"></i>Duplicar curso</button><button class="game-btn danger col-span-2" onclick="confirmDeleteCourse('${c.id}')"><i data-lucide="trash-2"></i>Eliminar curso</button></div></div></article>`).join(""):`<div class="panel p-8 text-center md:col-span-2"><h3 class="brand text-2xl">Aún no tienes cursos</h3><p class="text-slate-500 mt-2">Crea tu primer curso para comenzar.</p><button class="game-btn primary mt-4" onclick="openCourseModal()">Crear curso</button></div>`;icons();
+}
+function duplicateCourse(id){
+ const source=app.courses.find(c=>c.id===id);if(!source)return;
+ const copy=structuredClone(source);copy.id=uid("c");
+ const base=source.name.replace(/ \(copia(?: \d+)?\)$/i,"");
+ const copies=app.courses.filter(c=>c.name===base||c.name.startsWith(base+" (copia")).length;
+ copy.name=base+" "+(copies+1);
+ copy.classes=copy.classes.map((x,i)=>{const cl=structuredClone(x);cl.id=uid("cl");cl.title=x.title;cl.group=0;cl.calls=0;cl.attendance={};cl.attendanceRewarded=false;cl.check=[false,false,false,false];cl.status="Pendiente";cl.history=["Clase duplicada con 0 / 50 puntos del equipo"];cl.missions=cl.missions.map(m=>({...m,id:uid("m"),status:"pending",awarded:false,files:m.files.map(f=>({...f,id:uid("f")}))}));cl.materials=cl.materials.map(f=>({...f,id:uid("f")}));return cl});
+ copy.tasks=copy.tasks.map(t=>({...t,id:uid("t"),deliveries:{},awarded:{}}));
+ copy.materials=copy.materials.map(f=>({...f,id:uid("f")}));
+ app.courses.push(copy);renderHome();toast("Curso duplicado correctamente.");
+}
+function confirmDeleteCourse(id){const c=app.courses.find(x=>x.id===id);if(!c)return;showModal("Eliminar curso",`<p>¿Deseas eliminar definitivamente el curso <b>${esc(c.name)}</b>?</p><div class="flex flex-wrap gap-2 mt-5"><button class="game-btn soft" onclick="closeModal()">Cancelar</button><button class="game-btn danger" onclick="deleteCourse('${id}')">Eliminar definitivamente</button></div>`)}
+function deleteCourse(id){const wasActive=app.activeCourse===id;app.courses=app.courses.filter(c=>c.id!==id);if(wasActive){app.activeCourse=null;app.activeClass=null;$('active-tools').classList.add('hidden')}closeModal();renderHome();if(wasActive||!app.courses.length)switchView("home-view");toast("Curso eliminado correctamente.")}
+function openCourse(id,tab){
+ app.activeCourse=id;app.activeClass=null;app.courseTab=tab||app.courseTab||"classes";$("course-title").textContent=course().name;showCourseTab(app.courseTab);switchView("course-view");
+}
+function backToCourse(){if(!course()){goHome();return}openCourse(app.activeCourse,app.courseTab)}
+function showCourseTab(tab){
+ app.courseTab=tab;document.querySelectorAll("[data-course-tab]").forEach(b=>b.classList.toggle("active",b.dataset.courseTab===tab));
+ const c=course();let html="";
+ if(tab==="classes") html=`<div class="grid md:grid-cols-2 gap-4">${c.classes.map((x,i)=>`<article class="card"><div class="flex justify-between gap-2"><div><span class="badge bg-sky-100 text-blue-700">CLASE ${i+1}</span><h2 class="font-extrabold text-xl mt-2">${esc(x.title)}</h2><p class="text-sm text-slate-500">${x.date} · ${x.status}</p></div><span class="text-3xl">🚀</span></div><p class="mt-4 font-bold text-blue-700">Puntos del equipo: ${x.group} / 50</p><div class="progress mt-2"><span style="width:${x.group*2}%"></span></div><div class="grid grid-cols-2 gap-2 mt-4"><button class="game-btn primary" onclick="enterClass('${x.id}')"><i data-lucide="play"></i>Ingresar</button><button class="game-btn soft" onclick="duplicateClass('${x.id}')"><i data-lucide="copy"></i>Duplicar clase</button><button class="game-btn soft" onclick="openClassModal('${x.id}')"><i data-lucide="pencil"></i>Editar</button><button class="game-btn danger" onclick="confirmDeleteClass('${x.id}')"><i data-lucide="trash-2"></i>Eliminar clase</button></div></article>`).join("")||`<div class="card text-center text-slate-500">No hay clases. Crea una para empezar.</div>`}</div>`;
+ if(tab==="tasks") html=renderTasks(c);
+ if(tab==="materials") html=renderMaterials(c.materials,"course");
+ if(tab==="students") html=renderStudents(c);
+ $("course-content").innerHTML=html;icons();
+}
+function studentAvatar(){return "😊"}
+function renderStudents(c){return `<div class="flex flex-wrap justify-between items-center gap-3"><div><h2 class="brand text-2xl">Estudiantes</h2><p class="text-slate-500">Puntos personales y progreso individual.</p></div><button class="game-btn primary text-lg px-6 py-4" onclick="openStudentModal()"><i data-lucide="user-plus"></i>Agregar estudiante</button></div><div class="grid md:grid-cols-2 gap-4 mt-5">${c.students.map(s=>`<article class="card"><div class="flex gap-3 items-start"><span class="text-4xl" aria-label="Avatar">${esc(s.avatar||studentAvatar())}</span><div class="flex-1 min-w-0"><h3 class="brand text-xl">${esc(s.name)}</h3><p class="font-extrabold text-blue-700">${s.points} puntos personales</p><div class="progress mt-2"><span style="width:${Math.min(100,s.points*2)}%"></span></div><p class="text-xs text-slate-500 mt-1">${s.avatarChosen?"Avatar elegido":"Avatar inicial: carita feliz"}</p></div></div><div class="flex flex-wrap gap-2 mt-4"><button class="game-btn soft" onclick="openProfile('${s.id}')">Ver perfil</button><button class="game-btn green" onclick="studentPointAction('${s.id}',1)">Sumar puntos</button><button class="game-btn orange" onclick="studentPointAction('${s.id}',-1)">Restar puntos</button><button class="game-btn soft" onclick="openStudentModal('${s.id}')">Editar</button><button class="game-btn danger" onclick="confirmDeleteStudent('${s.id}')">Eliminar</button></div><p class="text-sm font-bold mt-3 ${s.points>=50?'text-green-700':'text-slate-500'}">${s.points>=50?'Avatar desbloqueado: elige uno':'Necesita 50 puntos para canjear un avatar'}</p></article>`).join("")||`<div class="card text-center text-slate-500 md:col-span-2">Aún no hay estudiantes en este curso.</div>`}</div>`}
+function openStudentModal(id){const c=course(),s=id?c.students.find(x=>x.id===id):null;showModal(s?"Editar estudiante":"Agregar estudiante",`<form onsubmit="saveStudent(event,'${id||""}')"><label class="font-bold">Nombre completo<input class="form-control mt-1" name="name" required value="${s?esc(s.name):""}"></label><label class="font-bold block mt-3">Puntos personales iniciales<input class="form-control mt-1" name="points" type="number" min="0" value="${s?s.points:0}" required></label><label class="font-bold block mt-3">Observaciones opcionales<textarea class="form-control mt-1" name="observations">${s?esc(s.observations||""):""}</textarea></label><button class="game-btn primary mt-5">Guardar estudiante</button></form>`)}
+function saveStudent(e,id){e.preventDefault();const d=Object.fromEntries(new FormData(e.target)),c=course();if(id){const s=c.students.find(x=>x.id===id);s.name=d.name;s.points=Math.max(0,Number(d.points)||0);s.observations=d.observations}else c.students.push({id:uid("st"),name:d.name,points:Math.max(0,Number(d.points)||0),avatar:studentAvatar(),avatarChosen:false,badges:[],history:[],observations:d.observations,attendance:{}});closeModal();showCourseTab("students");toast("Estudiante guardado.")}
+function studentPointAction(id,direction){const s=course().students.find(x=>x.id===id);showModal(direction>0?"Sumar puntos":"Restar puntos",`<form onsubmit="applyStudentPoints(event,'${id}',${direction})"><label class="font-bold">Cantidad<input class="form-control mt-1" name="amount" type="number" min="1" required></label><label class="font-bold block mt-3">Motivo opcional<input class="form-control mt-1" name="reason"></label><button class="game-btn primary mt-5">Guardar puntos</button></form>`)}
+function applyStudentPoints(e,id,direction){e.preventDefault();const d=new FormData(e.target),result=updateStudentPoints(id,Math.max(0,Number(d.get("amount"))||0)*direction,d.get("reason")||"Ajuste docente");closeModal();showCourseTab("students");toast(`${result.actual>=0?"+":""}${result.actual} puntos para ${result.student.name}`)}
+function confirmDeleteStudent(id){const s=course().students.find(x=>x.id===id);showModal("Eliminar estudiante",`<p>¿Eliminar a <b>${esc(s.name)}</b> de este curso?</p><div class="flex gap-2 mt-5"><button class="game-btn soft" onclick="closeModal()">Cancelar</button><button class="game-btn danger" onclick="deleteStudent('${id}')">Eliminar</button></div>`)}
+function deleteStudent(id){course().students=course().students.filter(s=>s.id!==id);closeModal();showCourseTab("students");toast("Estudiante eliminado del curso.")}
+function enterClass(id){
+ app.activeClass=id;$("active-tools").classList.remove("hidden");$("active-tools").classList.add("flex");$("active-class-name").textContent=cls().title;$("class-title").textContent=cls().title;$("class-date").textContent=cls().date;showClassTab(app.classTab||"attendance");switchView("class-view");
+}
+function renderSide(){
+ const c=cls(),students=course().students;
+ return `<div class="rounded-3xl p-5 text-white bg-gradient-to-br from-blue-700 to-blue-500"><div class="flex justify-between"><b>Puntos del equipo</b><i data-lucide="zap"></i></div><p class="text-4xl font-extrabold mt-2">${c.group} / 50</p><div class="progress mt-3 bg-white/30"><span style="width:${c.group*2}%;background:#fbd35e"></span></div><div class="flex gap-2 mt-4"><button class="game-btn bg-white/20 text-white px-3" onclick="changeGroup(1)">+1</button><button class="game-btn bg-white/20 text-white px-3" onclick="changeGroup(-1)">−1</button></div></div><div class="panel p-4"><h2 class="font-extrabold">Rendimiento del equipo</h2><p class="text-sm text-slate-500 mt-2">Meta final: <b>${c.group} / 50 puntos</b>.</p></div><div class="panel p-4"><h2 class="font-extrabold">Puntos personales</h2><div class="space-y-2 mt-3">${[...students].sort((a,b)=>b.points-a.points).slice(0,4).map(s=>`<button class="w-full flex justify-between bg-sky-50 rounded-xl px-3 py-2 text-left" onclick="openProfile('${s.id}')"><span>${s.avatar} ${esc(s.name)}</span><b class="text-blue-700">${s.points}</b></button>`).join("")}</div></div><div class="panel p-4"><h2 class="font-extrabold">Historial del equipo</h2><div class="mt-3 space-y-2 text-sm">${c.history.slice(0,5).map(h=>`<p class="border-l-4 border-green-400 pl-2">${esc(h)}</p>`).join("")}</div></div>`;
+}
+function showClassTab(tab){
+ app.classTab=tab;document.querySelectorAll("[data-class-tab]").forEach(b=>b.classList.toggle("active",b.dataset.classTab===tab));$("class-side").innerHTML=renderSide();
+ $("class-content").innerHTML=tab==="attendance"?renderAttendance():tab==="missions"?renderMissions():tab==="materials"?renderMaterials(cls().materials,"class"):tab==="noise"?renderNoise():renderClosing();icons();
+}
+function spanishVoices(){return speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith("es"))}
+function recommendedVoice(){let vs=spanishVoices();return vs.find(v=>/^es-co/i.test(v.lang))||vs.find(v=>/^es-es/i.test(v.lang))||vs[0]}
+function voiceOptions(){
+ const vs=spanishVoices(), rec=recommendedVoice();
+ if(!app.voiceUri&&rec)app.voiceUri=rec.voiceURI;
+ return vs.length?vs.map(v=>`<option value="${esc(v.voiceURI)}" ${v.voiceURI===app.voiceUri?"selected":""}>${esc(v.name)} — ${v.lang}${v.voiceURI===rec.voiceURI?" (recomendada)":""}</option>`).join(""):`<option value="">Voz predeterminada del dispositivo</option>`;
+}
+function renderAttendance(){
+ const c=cls(),students=course().students,present=students.filter(s=>c.attendance[s.id]!==false).length;
+ return `<div class="flex flex-wrap justify-between gap-3"><div><h2 class="brand text-2xl">Llamado a lista con voz</h2><p class="text-slate-500">Escucha cada nombre y marca la asistencia.</p></div><span class="badge bg-green-100 text-green-700">${present}/${students.length} presentes</span></div><div class="card mt-4 bg-sky-50"><div class="grid md:grid-cols-3 gap-3 items-end"><label class="font-bold">Voz<select class="form-control mt-1" onchange="app.voiceUri=this.value">${voiceOptions()}</select></label><label class="font-bold">Velocidad<select class="form-control mt-1" onchange="app.voiceRate=Number(this.value)"><option value=".85" ${app.voiceRate===.85?"selected":""}>Lenta · 0.85</option><option value=".95" ${app.voiceRate===.95?"selected":""}>Clara recomendada · 0.95</option><option value="1" ${app.voiceRate===1?"selected":""}>Normal · 1.0</option></select></label><div class="flex gap-2"><button class="game-btn primary flex-1" onclick="nextVoice()"><i data-lucide="skip-forward"></i>Siguiente</button><button class="game-btn soft px-3" onclick="stopVoice()" aria-label="Detener voz"><i data-lucide="square"></i></button></div></div><p id="voice-status" class="text-sm font-bold text-blue-700 mt-3" aria-live="polite">${spanishVoices().length?"Voz española disponible.":"No hay voz española disponible; se usará la voz predeterminada."}</p></div><div class="space-y-2 mt-4">${students.map(s=>{const p=c.attendance[s.id]!==false;return `<article class="card flex flex-wrap items-center gap-3"><span class="text-3xl">${s.avatar}</span><div class="flex-1"><b>${esc(s.name)}</b><p class="text-xs text-slate-500">${s.points} puntos personales</p></div><button class="game-btn soft" onclick="sayName('${s.id}')"><i data-lucide="volume-2"></i>Nombrar</button><button class="game-btn ${p?"green":"danger"}" onclick="toggleAttendance('${s.id}')">${p?"Presente":"Ausente"}</button><button class="game-btn soft px-3" onclick="openProfile('${s.id}')" aria-label="Ver perfil"><i data-lucide="user-round"></i></button></article>`}).join("")}</div><div class="flex flex-wrap gap-2 mt-5"><button class="game-btn soft" onclick="repeatVoice()"><i data-lucide="repeat-2"></i>Repetir nombre</button><button class="game-btn primary" onclick="confirmAttendance()"><i data-lucide="check-circle"></i>Confirmar asistencia y otorgar puntos</button></div>`;
+}
+function sayName(id){
+ const s=course().students.find(x=>x.id===id);app.lastVoice=s.name;const u=new SpeechSynthesisUtterance(s.name);const voices=speechSynthesis.getVoices(),v=voices.find(x=>x.voiceURI===app.voiceUri)||recommendedVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang="es-CO";u.rate=app.voiceRate;u.volume=.9;u.onstart=()=>{$("voice-status").textContent="Reproduciendo: "+s.name};u.onend=()=>{$("voice-status").textContent="Listo para continuar."};speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+function nextVoice(){const ss=course().students;app.voiceIndex=(app.voiceIndex||0)%ss.length;sayName(ss[app.voiceIndex++].id)}
+function repeatVoice(){if(app.lastVoice){const fake=course().students.find(s=>s.name===app.lastVoice);if(fake)sayName(fake.id)}}
+function stopVoice(){speechSynthesis.cancel();$("voice-status").textContent="Voz detenida."}
+function toggleAttendance(id){const c=cls();c.attendance[id]=c.attendance[id]===false;showClassTab("attendance")}
+function updateStudentPoints(studentId,amount,reason){
+ const s=course().students.find(x=>x.id===studentId);if(!s)return;const before=s.points;s.points=Math.max(0,s.points+amount);const actual=s.points-before;
+ const entry={date:new Date().toLocaleString("es-CO"),type:actual>=0?"suma":"descuento",amount:actual,reason:reason||"Ajuste docente",result:s.points};
+ s.history.unshift(entry);return {student:s,actual};
+}
+function confirmAttendance(){
+ const c=cls();if(c.attendanceRewarded)return toast("La asistencia ya fue premiada.");
+ course().students.filter(s=>c.attendance[s.id]!==false).forEach(s=>updateStudentPoints(s.id,2,"Asistencia confirmada"));
+ c.attendanceRewarded=true;c.history.unshift("Asistencia confirmada y puntos personales otorgados.");showClassTab("attendance");toast("Asistencia confirmada y puntos actualizados.");
+}
+function renderMissions(){
+ const c=cls();
+ return `<div class="flex flex-wrap justify-between gap-3"><div><h2 class="brand text-2xl">Misiones</h2><p class="text-slate-500">Retos cortos para aprender creando.</p></div><button class="game-btn primary" onclick="openMissionModal()"><i data-lucide="plus"></i>Nueva misión</button></div><div class="space-y-3 mt-5">${c.missions.map(m=>`<article class="card"><div class="flex justify-between gap-3"><div><span class="badge ${m.status==="done"?"bg-green-100 text-green-700":"bg-orange-100 text-orange-700"}">${m.status==="done"?"✓ Cumplida":"🚀 Disponible"}</span><h3 class="font-extrabold text-lg mt-2">${esc(m.title)}</h3><p class="text-slate-600 text-sm">${esc(m.description)}</p><p class="font-bold text-blue-700 text-sm mt-2">⏱ ${esc(m.time)} · ${m.points} puntos personales</p></div><div class="flex gap-1"><button class="game-btn soft px-3" onclick="openMissionModal('${m.id}')" aria-label="Editar misión"><i data-lucide="pencil"></i></button><button class="game-btn danger px-3" onclick="deleteMission('${m.id}')" aria-label="Eliminar misión"><i data-lucide="trash-2"></i></button></div></div><div class="mt-4 flex flex-wrap gap-2">${m.status!=="done"?`<button class="game-btn green" onclick="completeMission('${m.id}')"><i data-lucide="flag"></i>Completar misión</button>`:`<span class="badge bg-green-100 text-green-700">¡Misión cumplida!</span>`}<button class="game-btn primary" onclick="openFileModal('mission','${m.id}')"><i data-lucide="upload"></i>Subir archivo</button><button class="game-btn soft" onclick="openLinkModal('mission','${m.id}')"><i data-lucide="link"></i>Agregar enlace</button></div><div class="space-y-2 mt-3">${renderFiles(m.files,"mission",m.id)}</div></article>`).join("")||`<div class="card text-center text-slate-500">No hay misiones todavía. Crea una misión para empezar.</div>`}</div>`;
+}
+function completeMission(id){
+ const m=cls().missions.find(x=>x.id===id);if(m.awarded)return toast("Esta misión ya recibió su recompensa.");
+ course().students.forEach(s=>updateStudentPoints(s.id,m.points,"Misión completada: "+m.title));m.status="done";m.awarded=true;changeGroup(m.points,"Misión completada: "+m.title,false);showClassTab("missions");showMissionCelebration(m);
+}
+function showMissionCelebration(m){
+ showModal("¡Misión cumplida!",`<div class="text-center pt-4"><img data-template-id="teacher-avatar-class" class="canva-image celebrate-avatar mx-auto" loading="lazy"><h3 class="brand text-4xl mt-2">¡Misión cumplida!</h3><p class="text-xl font-extrabold text-blue-800 mt-3">${esc(m.title)}</p><p class="text-slate-600 mt-2">Recompensa obtenida: <b class="text-green-700">+${m.points} puntos personales</b> y puntos para el equipo.</p><button class="game-btn primary text-lg px-7 py-4 mt-6" onclick="closeModal()">Continuar <i data-lucide="arrow-right"></i></button></div>`,"mission-modal");
+}
+function renderFiles(files,scope,parentId){
+ if(!files.length)return `<p class="text-sm text-slate-500">Aún no hay archivos adjuntos.</p>`;
+ return files.map(f=>`<article class="file-card ${fileKind(f.ext)} card flex flex-wrap items-center gap-3"><span class="w-12 h-12 grid place-items-center rounded-xl bg-sky-50 text-2xl">${fileIcon(f.ext)}</span><div class="flex-1 min-w-[180px]"><b>${esc(f.name)}</b><p class="text-sm text-slate-500">${esc(f.ext.toUpperCase())} · ${formatSize(f.size)} · ${esc(f.date)}</p><span class="badge bg-green-100 text-green-700">${f.status}</span></div><div class="flex flex-wrap gap-2"><button class="game-btn soft px-3" onclick="openFile('${scope}','${parentId}','${f.id}')"><i data-lucide="eye"></i>Abrir</button><button class="game-btn green px-3" onclick="downloadFile('${scope}','${parentId}','${f.id}')"><i data-lucide="download"></i>Descargar</button><button class="game-btn orange px-3" onclick="replaceFile('${scope}','${parentId}','${f.id}')"><i data-lucide="refresh-cw"></i>Reemplazar</button><button class="game-btn danger px-3" onclick="removeFile('${scope}','${parentId}','${f.id}')"><i data-lucide="trash-2"></i>Eliminar</button></div></article>`).join("");
+}
+function fileKind(ext){return ext==="pdf"?"pdf":["doc","docx"].includes(ext)?"word":["ppt","pptx"].includes(ext)?"power":""}
+function fileIcon(ext){return ext==="pdf"?"📕":["doc","docx"].includes(ext)?"📘":["ppt","pptx"].includes(ext)?"📙":"🔗"}
+function formatSize(size){return size<1024?size+" B":(size/1024/1024).toFixed(1)+" MB"}
+function fileList(scope,parentId){if(scope==="course")return course().materials;if(scope==="class")return cls().materials;return cls().missions.find(m=>m.id===parentId).files}
+function renderMaterials(files,scope){
+ return `<div class="flex flex-wrap justify-between gap-3"><div><h2 class="brand text-2xl">Materiales</h2><p class="text-slate-500">Archivos y enlaces disponibles para aprender.</p></div><div class="flex gap-2"><button class="game-btn primary" onclick="openFileModal('${scope}','')"><i data-lucide="upload"></i>Subir archivo</button><button class="game-btn soft" onclick="openLinkModal('${scope}','')"><i data-lucide="link"></i>Agregar enlace</button></div></div><div class="space-y-3 mt-5">${renderFiles(files,scope,"")||`<div class="card text-center py-10"><span class="text-5xl">📚</span><h3 class="font-extrabold text-lg mt-3">Todavía no hay materiales</h3><p class="text-slate-500 mt-1">Sube un PDF, Word o PowerPoint, o agrega un enlace.</p></div>`}</div>`;
+}
+function openFileModal(scope,parentId,replacingId=""){
+ showModal(replacingId?"Reemplazar archivo":"Subir archivo",`<form onsubmit="saveFile(event,'${scope}','${parentId}','${replacingId}')"><label class="font-bold">Selecciona un archivo PDF, DOC, DOCX, PPT o PPTX<input class="form-control mt-2" name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required></label><p class="text-sm text-slate-500 mt-3">El archivo se conservará durante esta sesión y quedará vinculado a esta sección.</p><button class="game-btn primary mt-5" type="submit"><i data-lucide="upload"></i>Guardar archivo</button></form>`);
+}
+function saveFile(e,scope,parentId,replacingId){
+ e.preventDefault();const file=new FormData(e.target).get("file"),ext=file.name.split(".").pop().toLowerCase(),allowed=["pdf","doc","docx","ppt","pptx"];
+ if(!allowed.includes(ext)){toast("Formato no compatible. Usa PDF, DOC, DOCX, PPT o PPTX.");return}
+ const item={id:uid("f"),name:file.name,ext,size:file.size,date:new Date().toLocaleDateString("es-CO"),status:"Disponible",url:URL.createObjectURL(file),file};
+ const list=fileList(scope,parentId);if(replacingId){const i=list.findIndex(f=>f.id===replacingId);if(i>=0){URL.revokeObjectURL(list[i].url);list[i]=item}}else list.push(item);
+ closeModal();renderCurrent(scope);toast(replacingId?"Archivo reemplazado correctamente.":"Archivo subido correctamente.");
+}
+function renderCurrent(scope){scope==="course"?showCourseTab("materials"):showClassTab(scope==="mission"?"missions":"materials")}
+function openLinkModal(scope,parentId){
+ showModal("Agregar enlace",`<form onsubmit="saveLink(event,'${scope}','${parentId}')"><label class="font-bold">Nombre<input class="form-control mt-1" name="name" required></label><label class="font-bold block mt-3">Enlace<input class="form-control mt-1" name="url" type="url" required placeholder="https://"></label><button class="game-btn primary mt-5">Guardar enlace</button></form>`);
+}
+function saveLink(e,scope,parentId){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));fileList(scope,parentId).push({id:uid("l"),name:d.name,ext:"enlace",size:0,date:new Date().toLocaleDateString("es-CO"),status:"Disponible",url:d.url,file:null});closeModal();renderCurrent(scope);toast("Enlace agregado correctamente.");}
+function findFile(scope,parent,id){return fileList(scope,parent).find(f=>f.id===id)}
+function openFile(scope,parent,id){
+ const f=findFile(scope,parent,id);if(f.ext==="pdf"&&f.file){showModal("Vista previa: "+f.name,`<iframe class="file-preview" src="${f.url}" title="Vista previa del PDF"></iframe><div class="mt-4"><button class="game-btn green" onclick="downloadFile('${scope}','${parent}','${id}')"><i data-lucide="download"></i>Descargar PDF</button></div>`);return}
+ if(f.ext==="enlace"){window.open(f.url,"_blank","noopener");return}
+ showModal("Ficha de lectura",`<div class="card bg-sky-50"><div class="text-5xl">${fileIcon(f.ext)}</div><h3 class="font-extrabold text-xl mt-3">${esc(f.name)}</h3><p class="text-slate-600 mt-2">Archivo ${f.ext.toUpperCase()} · ${formatSize(f.size)} · agregado el ${f.date}.</p><p class="text-slate-500 mt-3">Este formato se abre o descarga con una aplicación compatible del dispositivo.</p><button class="game-btn green mt-5" onclick="downloadFile('${scope}','${parent}','${id}')"><i data-lucide="download"></i>Descargar archivo</button></div>`);
+}
+function downloadFile(scope,parent,id){const f=findFile(scope,parent,id);if(f.file){const a=document.createElement("a");a.href=f.url;a.download=f.name;a.click()}else window.open(f.url,"_blank","noopener")}
+function replaceFile(scope,parent,id){openFileModal(scope,parent,id)}
+function removeFile(scope,parent,id){const list=fileList(scope,parent),f=list.find(x=>x.id===id);if(f?.file)URL.revokeObjectURL(f.url);const i=list.findIndex(x=>x.id===id);if(i>=0)list.splice(i,1);renderCurrent(scope);toast("Archivo eliminado.");}
+
+function renderNoise(){
+ const c=cls();return `<div class="text-center"><span class="text-6xl">📢</span><h2 class="brand text-2xl mt-3">Control de ruido</h2><p class="text-slate-500">Cuidemos el ambiente para aprender mejor.</p><p class="text-5xl font-extrabold text-red-500 mt-5">${c.calls}</p><p class="font-bold">llamados de atención</p><button class="game-btn noise text-lg px-6 py-4 mt-5" onclick="startNoise()"><i data-lucide="megaphone"></i>Activar alerta de ruido</button><div class="card text-left mt-6"><label class="font-bold">Penalización automática<select class="form-control mt-2" onchange="cls().penalty=Number(this.value)"><option value="1" ${c.penalty===1?"selected":""}>1 punto</option><option value="2" ${c.penalty===2?"selected":""}>2 puntos</option><option value="5" ${c.penalty===5?"selected":""}>5 puntos</option></select></label><p class="text-sm text-slate-500 mt-2">Solo se descuenta si la alerta llega a cero.</p></div></div>`;
+}
+function startNoise(){
+ if(!cls()){toast("Ingresa a una clase para usar el control de ruido.");return}if(app.noise.active)return;
+ app.noise.active=true;app.noise.left=10;app.noise.penalty=cls().penalty;cls().calls++;$("noise-top-button").classList.add("active");renderNoiseModal();app.noise.timer=setInterval(tickNoise,1000);playBeep();
+}
+function renderNoiseModal(){
+ showModal("ALERTA DE RUIDO",`<div class="text-center"><i data-lucide="megaphone" class="mx-auto" style="width:92px;height:92px"></i><h3 class="font-black text-4xl mt-3 tracking-wide">ALERTA DE RUIDO</h3><p class="text-xl font-bold mt-3">El equipo debe bajar el ruido.</p><p id="noise-count" class="text-8xl font-black my-5">${app.noise.left}</p><p class="text-lg">Si la alerta llega a cero, el equipo pierde puntos.</p><div class="progress mt-5"><span id="noise-progress" style="width:${app.noise.left*10}%"></span></div><div class="flex flex-wrap justify-center gap-3 mt-6"><button class="game-btn bg-white text-red-700 text-lg px-5 py-4" onclick="stopNoise(true)"><i data-lucide="shield-check"></i>Detener alerta y evitar penalización</button><button class="game-btn bg-red-900 text-white" onclick="activateSound()"><i data-lucide="volume-2"></i>Activar sonido</button></div><p id="sound-status" class="mt-3 text-sm font-bold">${app.noise.audio?"Sonido activo":"La señal visual siempre permanece activa."}</p></div>`,"noise-modal");
+}
+function tickNoise(){
+ app.noise.left--;const count=$("noise-count"),bar=$("noise-progress");if(count)count.textContent=app.noise.left;if(bar)bar.style.width=(app.noise.left*10)+"%";
+ if(app.noise.left>0&&app.noise.left%2===0)playBeep();
+ if(app.noise.left<=0){clearInterval(app.noise.timer);app.noise.timer=null;const penalty=app.noise.penalty;app.noise.active=false;$("noise-top-button").classList.remove("active");changeGroup(-penalty,"Penalización por ruido",false);showModal("Resultado de la alerta",`<div class="text-center"><div class="text-6xl">📢</div><h3 class="brand text-3xl mt-3">-${penalty} puntos del equipo por ruido</h3><p class="text-slate-600 mt-3">La alerta llegó a cero. Puntos actuales: ${cls().group} / 50.</p><button class="game-btn primary mt-6" onclick="closeModal();showClassTab('noise')">Cerrar</button></div>`);toast("Se aplicó la penalización por ruido.");}
+}
+function activateSound(){app.noise.audio=true;playBeep();const status=$("sound-status");if(status)status.textContent="Sonido activo."}
+function playBeep(){
+ if(!app.noise.audio)return;
+ try{const C=window.AudioContext||window.webkitAudioContext;const ctx=new C();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.frequency.value=880;gain.gain.value=.09;osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.16);osc.onended=()=>ctx.close()}catch(e){const status=$("sound-status");if(status)status.textContent="No se pudo activar el sonido; la alerta visual sigue activa."}
+}
+function stopNoise(preventPenalty){
+ if(app.noise.timer)clearInterval(app.noise.timer);app.noise.timer=null;app.noise.active=false;$("noise-top-button").classList.remove("active");closeModal();if(preventPenalty)toast("Alerta detenida. No se descontaron puntos.");
+}
+function changeGroup(amount,reason,rerender=true){
+ const c=cls();c.group=clamp(c.group+amount,0,50);c.history.unshift((amount>=0?"+":"")+amount+" puntos del equipo: "+reason);if(rerender)showClassTab(app.classTab);
+}
+function renderTasks(c){return `<div class="panel p-5"><div class="flex justify-between gap-3"><div><h2 class="brand text-2xl">Tareas del curso</h2><p class="text-slate-500">Entrega y recompensa para cada estudiante.</p></div><button class="game-btn primary" onclick="openTaskModal()"><i data-lucide="plus"></i>Nueva</button></div><div class="space-y-4 mt-5">${c.tasks.map(t=>`<article class="card"><div class="flex justify-between gap-3"><div><h3 class="font-extrabold text-lg">${esc(t.title)}</h3><p class="text-sm text-slate-600">${esc(t.description)}</p><p class="text-sm font-bold text-blue-700 mt-2">Entrega: ${t.due} · ${t.points} puntos personales</p></div><button class="game-btn danger px-3 h-fit" onclick="deleteTask('${t.id}')"><i data-lucide="trash-2"></i></button></div><div class="mt-4 space-y-2">${c.students.map(s=>`<div class="flex flex-wrap items-center gap-2 bg-sky-50 rounded-xl p-3"><span>${s.avatar}</span><b class="flex-1">${esc(s.name)}</b><span class="badge ${t.deliveries[s.id]?"bg-green-100 text-green-700":"bg-orange-100 text-orange-700"}">${t.deliveries[s.id]?"Entregó":"Pendiente"}</span><button class="game-btn soft" onclick="toggleDelivery('${t.id}','${s.id}')">${t.deliveries[s.id]?"Desmarcar":"Marcar entrega"}</button>${t.deliveries[s.id]&&!t.awarded[s.id]?`<button class="game-btn green" onclick="awardTask('${t.id}','${s.id}')">Otorgar +${t.points}</button>`:""}${t.awarded[s.id]?`<span class="badge bg-blue-100 text-blue-700">Puntos otorgados</span>`:""}</div>`).join("")}</div></article>`).join("")||`<div class="card text-center text-slate-500">No hay tareas todavía.</div>`}</div>`}
+function toggleDelivery(tid,sid){const t=course().tasks.find(x=>x.id===tid);t.deliveries[sid]=!t.deliveries[sid];showCourseTab("tasks")}
+function awardTask(tid,sid){const t=course().tasks.find(x=>x.id===tid);if(t.awarded[sid])return;const r=updateStudentPoints(sid,t.points,"Tarea entregada: "+t.title);t.awarded[sid]=true;showCourseTab("tasks");toast(`+${r.actual} puntos personales para ${r.student.name}`)}
+function renderClosing(){
+ const c=cls(),labels=["Recoger materiales","Organizar mesas","Recoger residuos","Dejar el espacio limpio"],done=c.check.every(Boolean),reward=c.group>=35?["🏆","Recompensa dorada","Desempeño alto del equipo."]:c.group>=20?["🥈","Recompensa plateada","Buen desempeño del equipo."]:["🔷","Recompensa azul","Un comienzo valioso para seguir creciendo."];
+ return `<div><div class="flex items-center gap-4"><img data-template-id="teacher-avatar-close" class="canva-image teacher w-20 h-20" loading="lazy"><div><span data-template-id="closing-tag" class="canva-tag badge"></span><h2 data-template-id="closing-title" class="canva-text brand mt-1"></h2></div></div><div class="card mt-5 bg-sky-50"><p class="font-extrabold text-xl">Puntuación final: ${c.group} / 50</p><p class="text-slate-600 mt-1">${reward[0]} ${reward[1]} · ${reward[2]}</p></div><h3 data-template-id="checklist-title" class="canva-text mt-5"></h3><div class="space-y-3 mt-3">${labels.map((x,i)=>`<label class="card flex gap-3 items-center ${c.check[i]?"bg-green-50":""}"><input type="checkbox" ${c.check[i]?"checked":""} onchange="toggleCheck(${i})"><span class="text-xl">${["📦","🪑","♻️","✨"][i]}</span><b>${x}</b></label>`).join("")}</div><button data-template-id="finish-class-button" class="canva-button game-btn green mt-5" ${done?"":"disabled"} onclick="finishClass()"><i data-lucide="party-popper"></i></button></div>`;
+}
+function toggleCheck(i){cls().check[i]=!cls().check[i];showClassTab("close")}
+function finishClass(){const c=cls();c.status="Cerrada";const medal=c.group>=35?"🏆 Recompensa dorada":c.group>=20?"🥈 Recompensa plateada":"🔷 Recompensa azul";showModal("Clase finalizada",`<div class="text-center"><div class="text-6xl">${medal.split(" ")[0]}</div><h3 class="brand text-3xl mt-3">${medal}</h3><p class="text-xl mt-3">Puntuación final: <b>${c.group} / 50</b></p><button class="game-btn primary mt-6" onclick="closeModal();showClassTab('close')">Continuar</button></div>`)}
+function openProfile(id){
+ const s=course().students.find(x=>x.id===id);
+ showModal("Perfil de "+s.name,`<div class="text-center"><div class="text-7xl">${s.avatar}</div><h3 class="brand text-2xl mt-2">${esc(s.name)}</h3><span class="badge bg-blue-100 text-blue-700 mt-2">${s.points} puntos personales</span><p class="text-sm text-slate-500 mt-2">${s.avatarChosen?"Avatar elegido":"Avatar inicial: carita feliz"}</p><p class="text-sm font-bold mt-2">${s.points>=50?"Avatar desbloqueado: elige uno":"Necesita 50 puntos para canjear un avatar"}</p><div class="progress mt-2"><span style="width:${Math.min(100,s.points*2)}%"></span></div><p class="text-xs text-slate-500">Progreso para canjear otro avatar</p><button class="game-btn primary mt-3" ${s.points<50?"disabled":""} onclick="openAvatarGallery('${s.id}')">Canjear avatar</button></div><form class="card mt-4" onsubmit="event.preventDefault();quickPoints('${s.id}',this)"><b>Ajuste rápido de puntos</b><div class="grid grid-cols-2 gap-2 mt-2"><label><span class="sr-only">Cantidad</span><input class="form-control" name="amount" type="number" min="1" required placeholder="Cantidad"></label><label><span class="sr-only">Motivo</span><input class="form-control" name="reason" placeholder="Motivo opcional"></label></div><div class="flex flex-wrap gap-2 mt-3"><button class="game-btn green" name="direction" value="1">Sumar puntos</button><button class="game-btn danger" name="direction" value="-1">Restar puntos</button></div></form><div class="mt-4"><b>Historial personal</b>${s.history.slice(0,8).map(h=>`<p class="text-sm border-l-4 border-sky-400 pl-2 mt-2">${esc(h.date)} · ${h.amount>=0?"+":""}${h.amount} · ${esc(h.reason)} · Total: ${h.result}</p>`).join("")||`<p class="text-sm text-slate-500 mt-2">Sin movimientos aún.</p>`}</div>`);
+}
+function openAvatarGallery(id){const s=course().students.find(x=>x.id===id);if(!s||s.points<50)return;showModal("Elige un avatar",`<p class="text-slate-600">Selecciona un avatar juvenil y amistoso. Se descontarán 50 puntos al confirmar.</p><div class="grid grid-cols-3 gap-3 mt-4">${["😊","😎","🤓","🥳","😄","🤗"].map((a,i)=>`<button class="card text-4xl" type="button" onclick="selectAvatar('${id}','${a}')" aria-label="Elegir avatar ${i+1}">${a}</button>`).join("")}</div><p id="avatar-preview" class="text-center text-4xl mt-4">Vista previa</p><button class="game-btn primary mt-4" onclick="confirmAvatar('${id}')">Confirmar canje por 50 puntos</button>`)}
+function selectAvatar(id,avatar){app.pendingAvatar=avatar;const preview=$("avatar-preview");if(preview)preview.textContent=avatar}
+function confirmAvatar(id){const s=course().students.find(x=>x.id===id);if(!s||s.points<50||!app.pendingAvatar)return toast("Elige un avatar con 50 puntos disponibles.");s.points-=50;s.avatar=app.pendingAvatar;s.avatarChosen=true;s.history.unshift({date:new Date().toLocaleString("es-CO"),type:"canje",amount:-50,reason:"-50 puntos por canje de avatar",result:s.points,avatar:s.avatar});app.pendingAvatar=null;closeModal();showCourseTab("students");toast("Avatar canjeado. Se descontaron 50 puntos.")}
+function quickPoints(id,form){const d=new FormData(form),amount=(Number(d.get("amount"))||0)*Number(d.get("direction")),r=updateStudentPoints(id,amount,d.get("reason")||"Ajuste docente");openProfile(id);toast(`${r.actual>=0?"+":""}${r.actual} puntos personales para ${r.student.name}`)}
+function openCourseModal(id){const c=id?app.courses.find(x=>x.id===id):null;showModal(c?"Editar curso":"Crear curso",`<form onsubmit="saveCourse(event,'${id||""}')"><label class="font-bold">Nombre<input class="form-control mt-1" name="name" required value="${c?esc(c.name):""}"></label><button class="game-btn primary mt-5">Guardar curso</button></form>`)}
+function saveCourse(e,id){e.preventDefault();const name=new FormData(e.target).get("name");if(id)app.courses.find(x=>x.id===id).name=name;else app.courses.push({id:uid("c"),name,students:[],materials:[],tasks:[],classes:[]});closeModal();renderHome();toast("Curso guardado.")}
+function openClassModal(id){
+ const c=course(),x=id?c.classes.find(z=>z.id===id):null;showModal(x?"Editar clase":"Crear clase",`<form onsubmit="saveClass(event,'${id||""}')"><label class="font-bold">Título<input class="form-control mt-1" name="title" required value="${x?esc(x.title):"Clase "+(c.classes.length+1)}"></label><label class="font-bold block mt-3">Fecha<input class="form-control mt-1" name="date" type="date" required value="${x?x.date:"2026-09-25"}"></label>${x?`<p class="text-sm text-blue-700 font-bold mt-4">Puntos del equipo actuales: ${x.group} / 50</p>`:`<p class="text-sm text-green-700 font-bold mt-4">La clase nueva comenzará con Puntos del equipo: 0 / 50.</p>`}<button class="game-btn primary mt-5">Guardar clase</button></form>`);
+}
+function saveClass(e,id){e.preventDefault();const d=new FormData(e.target),c=course();if(id){const x=c.classes.find(z=>z.id===id);x.title=d.get("title");x.date=d.get("date")}else{const x=makeClass(c.classes.length+1);x.title=d.get("title");x.date=d.get("date");x.group=0;c.classes.push(x)}closeModal();showCourseTab("classes");toast("Clase guardada con puntos del equipo en 0 / 50.")}
+function duplicateClass(id){
+ const source=course().classes.find(x=>x.id===id);const copy=structuredClone(source);copy.id=uid("cl");copy.title="Clase "+(course().classes.length+1);copy.group=0;copy.calls=0;copy.attendance={};copy.attendanceRewarded=false;copy.check=[false,false,false,false];copy.status="Pendiente";copy.history=["Clase duplicada con 0 / 50 puntos del equipo"];copy.missions=copy.missions.map(m=>({...m,id:uid("m"),status:"pending",awarded:false,files:[]}));copy.materials=copy.materials.map(f=>({...f,id:uid("f")}));course().classes.push(copy);showCourseTab("classes");toast("Clase duplicada. Empieza con 0 / 50 puntos.")}
+function confirmDeleteClass(id){const x=course().classes.find(z=>z.id===id),last=course().classes.length===1;showModal("Eliminar clase",`<p>¿Deseas eliminar <b>${esc(x.title)}</b>?</p>${last?`<p class="card bg-orange-50 mt-3 text-orange-800"><b>Atención:</b> es la única clase del curso. Confirma para dejar el curso sin clases.</p>`:""}<div class="flex flex-wrap gap-2 mt-5"><button class="game-btn danger" onclick="deleteClass('${id}')">Sí, eliminar clase</button><button class="game-btn soft" onclick="closeModal()">Cancelar</button></div>`)}
+function deleteClass(id){course().classes=course().classes.filter(x=>x.id!==id);if(app.activeClass===id)app.activeClass=null;closeModal();showCourseTab("classes");toast("Clase eliminada correctamente.")}
+function openMissionModal(id){const m=id?cls().missions.find(x=>x.id===id):null;showModal(m?"Editar misión":"Nueva misión",`<form onsubmit="saveMission(event,'${id||""}')"><label class="font-bold">Título<input class="form-control mt-1" name="title" required value="${m?esc(m.title):""}"></label><label class="font-bold block mt-3">Descripción<textarea class="form-control mt-1" name="description" required>${m?esc(m.description):""}</textarea></label><div class="grid grid-cols-2 gap-3 mt-3"><label class="font-bold">Tiempo<input class="form-control mt-1" name="time" value="${m?esc(m.time):"15 min"}"></label><label class="font-bold">Recompensa<input class="form-control mt-1" name="points" type="number" min="1" value="${m?m.points:5}"></label></div><button class="game-btn primary mt-5">Guardar misión</button></form>`)}
+function saveMission(e,id){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));if(id)Object.assign(cls().missions.find(x=>x.id===id),{...d,points:Number(d.points)});else cls().missions.push({id:uid("m"),...d,points:Number(d.points),status:"pending",awarded:false,files:[]});closeModal();showClassTab("missions")}
+function deleteMission(id){cls().missions=cls().missions.filter(x=>x.id!==id);showClassTab("missions");toast("Misión eliminada.")}
+function openTaskModal(){showModal("Nueva tarea",`<form onsubmit="saveTask(event)"><label class="font-bold">Título<input class="form-control mt-1" name="title" required></label><label class="font-bold block mt-3">Descripción<textarea class="form-control mt-1" name="description" required></textarea></label><div class="grid grid-cols-2 gap-3 mt-3"><label class="font-bold">Entrega<input class="form-control mt-1" name="due" type="date" required></label><label class="font-bold">Puntos<input class="form-control mt-1" name="points" type="number" min="1" value="5"></label></div><button class="game-btn primary mt-5">Guardar tarea</button></form>`)}
+function saveTask(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));course().tasks.push({id:uid("t"),...d,points:Number(d.points),deliveries:{},awarded:{}});closeModal();showCourseTab("tasks")}
+function deleteTask(id){course().tasks=course().tasks.filter(x=>x.id!==id);showCourseTab("tasks");toast("Tarea eliminada.")}
+function stopTimer(){clearInterval(app.timerHandle);app.timerHandle=null}
+function toggleTimer(){if(app.timerHandle){stopTimer();$("timer-toggle").innerHTML="<i data-lucide='play'></i>"}else{app.timerHandle=setInterval(()=>{if(app.timer>0){app.timer--;updateTimer()}else stopTimer()},1000);$("timer-toggle").innerHTML="<i data-lucide='pause'></i>"}icons()}
+function updateTimer(){const m=Math.floor(app.timer/60),s=app.timer%60;$("timer-display").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+document.addEventListener("DOMContentLoaded",()=>{startApp();if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{if(app.activeClass&&app.classTab==="attendance")showClassTab("attendance")}}});
+</script>
+ 
+</body></html>
